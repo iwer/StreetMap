@@ -1,8 +1,7 @@
 // Copyright 2017 Mike Fricker. All Rights Reserved.
 
-#include "StreetMapImporting.h"
-
 #include "StreetMapComponentDetails.h"
+#include "StreetMapImporting.h"
 
 #include "SlateBasics.h"
 #include "RawMesh.h"
@@ -233,7 +232,7 @@ FReply FStreetMapComponentDetails::OnCreateStaticMeshAssetClicked()
 			// Materials to apply to new mesh
 			TArray<UMaterialInterface*> MeshMaterials = SelectedStreetMapComponent->GetMaterials();
 
-			
+
 			const TArray<FStreetMapVertex > RawMeshVertices = SelectedStreetMapComponent->GetRawMeshVertices();
 			const TArray< uint32 > RawMeshIndices = SelectedStreetMapComponent->GetRawMeshIndices();
 
@@ -287,17 +286,18 @@ FReply FStreetMapComponentDetails::OnCreateStaticMeshAssetClicked()
 
 				StaticMesh->LightingGuid = FGuid::NewGuid();
 
-				// Add source to new StaticMesh
-				FStaticMeshSourceModel* SrcModel = new (StaticMesh->SourceModels) FStaticMeshSourceModel();
-				SrcModel->BuildSettings.bRecomputeNormals = false;
-				SrcModel->BuildSettings.bRecomputeTangents = false;
-				SrcModel->BuildSettings.bRemoveDegenerates = false;
-				SrcModel->BuildSettings.bUseHighPrecisionTangentBasis = false;
-				SrcModel->BuildSettings.bUseFullPrecisionUVs = false;
-				SrcModel->BuildSettings.bGenerateLightmapUVs = true;
-				SrcModel->BuildSettings.SrcLightmapIndex = 0;
-				SrcModel->BuildSettings.DstLightmapIndex = 1;
-				SrcModel->RawMeshBulkData->SaveRawMesh(RawMesh);
+				// Add source to new StaticMesh           --------------------vvv  Direct access to SourceModels is deprecated
+				//FStaticMeshSourceModel* SrcModel = new (StaticMesh->SourceModels) FStaticMeshSourceModel();
+                FStaticMeshSourceModel& SrcModel = StaticMesh->AddSourceModel();
+				SrcModel.BuildSettings.bRecomputeNormals = false;
+				SrcModel.BuildSettings.bRecomputeTangents = false;
+				SrcModel.BuildSettings.bRemoveDegenerates = false;
+				SrcModel.BuildSettings.bUseHighPrecisionTangentBasis = false;
+				SrcModel.BuildSettings.bUseFullPrecisionUVs = false;
+				SrcModel.BuildSettings.bGenerateLightmapUVs = true;
+				SrcModel.BuildSettings.SrcLightmapIndex = 0;
+				SrcModel.BuildSettings.DstLightmapIndex = 1;
+				SrcModel.RawMeshBulkData->SaveRawMesh(RawMesh);
 
 				// Copy materials to new mesh
 				for (UMaterialInterface* Material : MeshMaterials)
@@ -324,7 +324,9 @@ FReply FStreetMapComponentDetails::OnCreateStaticMeshAssetClicked()
 					FNotificationInfo Info(FText::Format(LOCTEXT("StreetMapMeshConverted", "Successfully Converted Mesh"), FText::FromString(StaticMesh->GetName())));
 					Info.ExpireDuration = 8.0f;
 					Info.bUseLargeFont = false;
-					Info.Hyperlink = FSimpleDelegate::CreateLambda([=]() { FAssetEditorManager::Get().OpenEditorForAssets(TArray<UObject*>({ StaticMesh })); });
+                    //                                                       -------------------------------------------vvv is deprecated
+                    //Info.Hyperlink = FSimpleDelegate::CreateLambda([=]() { FAssetEditorManager::Get().OpenEditorForAssets(TArray<UObject*>({ StaticMesh })); });
+                    Info.Hyperlink = FSimpleDelegate::CreateLambda([=]() { GEditor->GetEditorSubsystem<UAssetEditorSubsystem>()->OpenEditorForAssets(TArray<UObject*>({ StaticMesh })); });
 					Info.HyperlinkText = FText::Format(LOCTEXT("OpenNewAnimationHyperlink", "Open {0}"), FText::FromString(StaticMesh->GetName()));
 					TSharedPtr<SNotificationItem> Notification = FSlateNotificationManager::Get().AddNotification(Info);
 					if (Notification.IsValid())

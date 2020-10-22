@@ -1,7 +1,7 @@
 // Copyright 2017 Mike Fricker. All Rights Reserved.
 
-#include "StreetMapImporting.h"
 #include "StreetMapFactory.h"
+#include "StreetMapImporting.h"
 #include "OSMFile.h"
 #include "StreetMap.h"
 
@@ -70,10 +70,10 @@ bool UStreetMapFactory::LoadFromOpenStreetMapXMLFile( UStreetMap* StreetMap, FSt
 	};
 
 	// Converts latitude and longitude to X/Y coordinates, relative to some other latitude/longitude
-	auto ConvertLatLongToMetersRelative = [ConvertLatitudeToMeters, ConvertLongitudeToMeters]( 
-		const double Latitude, 
-		const double Longitude, 
-		const double RelativeToLatitude, 
+	auto ConvertLatLongToMetersRelative = [ConvertLatitudeToMeters, ConvertLongitudeToMeters](
+		const double Latitude,
+		const double Longitude,
+		const double RelativeToLatitude,
 		const double RelativeToLongitude ) -> FVector2D
 	{
 		// Applies Sanson-Flamsteed (sinusoidal) Projection (see http://www.progonos.com/furuti/MapProj/Normal/CartHow/HowSanson/howSanson.html)
@@ -83,10 +83,10 @@ bool UStreetMapFactory::LoadFromOpenStreetMapXMLFile( UStreetMap* StreetMap, FSt
 	};
 
 	// Adds a road to the street map using the OpenStreetMap data, flattening the road's coordinates into our map's space
-	auto AddRoadForWay = [ConvertLatLongToMetersRelative, OSMToCentimetersScaleFactor]( 
-		const FOSMFile& OSMFile, 
-		UStreetMap& StreetMapRef, 
-		const FOSMFile::FOSMWayInfo& OSMWay, 
+	auto AddRoadForWay = [ConvertLatLongToMetersRelative, OSMToCentimetersScaleFactor](
+		const FOSMFile& OSMFile,
+		UStreetMap& StreetMapRef,
+		const FOSMFile::FOSMWayInfo& OSMWay,
 		int32& OutRoadIndex ) -> bool
 	{
 		EStreetMapRoadType RoadType = EStreetMapRoadType::Other;
@@ -209,9 +209,9 @@ bool UStreetMapFactory::LoadFromOpenStreetMapXMLFile( UStreetMap* StreetMap, FSt
 
 
 	// Adds a building to the street map using the OpenStreetMap data, flattening the road's coordinates into our map's space
-	auto AddBuildingForWay = [ConvertLatLongToMetersRelative, OSMToCentimetersScaleFactor]( 
-		const FOSMFile& OSMFile, 
-		UStreetMap& StreetMapRef, 
+	auto AddBuildingForWay = [ConvertLatLongToMetersRelative, OSMToCentimetersScaleFactor](
+		const FOSMFile& OSMFile,
+		UStreetMap& StreetMapRef,
 		const FOSMFile::FOSMWayInfo& OSMWay ) -> bool
 	{
 		if( OSMWay.WayType == FOSMFile::EOSMWayType::Building )
@@ -376,7 +376,7 @@ bool UStreetMapFactory::LoadFromOpenStreetMapXMLFile( UStreetMap* StreetMap, FSt
 				}
 				else
 				{
-					// Skipped ref because we didn't keep this road in our data set							
+					// Skipped ref because we didn't keep this road in our data set
 				}
 			}
 
@@ -434,5 +434,3 @@ bool UStreetMapFactory::LoadFromOpenStreetMapXMLFile( UStreetMap* StreetMap, FSt
 
 	return true;
 }
-
-

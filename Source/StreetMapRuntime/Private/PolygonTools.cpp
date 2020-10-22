@@ -1,7 +1,7 @@
 // Copyright 2017 Mike Fricker. All Rights Reserved.
 
-#include "StreetMapRuntime.h"
 #include "PolygonTools.h"
+#include "StreetMapRuntime.h"
 
 
 // Based off "Efficient Polygon Triangulation" algorithm by John W. Ratcliff (http://flipcode.net/archives/Efficient_Polygon_Triangulation.shtml)
@@ -38,7 +38,7 @@ bool FPolygonTools::TriangulatePolygon( const TArray<FVector2D>& Polygon, TArray
 		}
 	}
 
-	// Remove NumVertices-2 vertices, creating one triangle every time 
+	// Remove NumVertices-2 vertices, creating one triangle every time
 	int32 ErrorDetectionCounter = 2 * NumVertices;
 	for( int32 V = NumVertices - 1; NumVertices > 2; )
 	{
@@ -64,7 +64,7 @@ bool FPolygonTools::TriangulatePolygon( const TArray<FVector2D>& Polygon, TArray
 			/* Remove V from remaining polygon */
 			for( int32 S = V, T = V + 1; T < NumVertices; S++, T++ )
 			{
-				VertexIndices[ S ] = VertexIndices[ T ]; 
+				VertexIndices[ S ] = VertexIndices[ T ];
 			}
 			NumVertices--;
 
@@ -75,4 +75,3 @@ bool FPolygonTools::TriangulatePolygon( const TArray<FVector2D>& Polygon, TArray
 
 	return true;
 }
-

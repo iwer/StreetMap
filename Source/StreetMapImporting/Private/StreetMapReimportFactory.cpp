@@ -1,7 +1,7 @@
 // Copyright 2017 Mike Fricker. All Rights Reserved.
 
-#include "StreetMapImporting.h"
 #include "StreetMapReimportFactory.h"
+#include "StreetMapImporting.h"
 #include "StreetMap.h"
 
 
@@ -30,8 +30,8 @@ void UStreetMapReimportFactory::SetReimportPaths( UObject* Obj, const TArray<FSt
 }
 
 
-EReimportResult::Type UStreetMapReimportFactory::Reimport( UObject* Obj ) 
-{ 
+EReimportResult::Type UStreetMapReimportFactory::Reimport( UObject* Obj )
+{
 	UStreetMap* StreetMap = CastChecked<UStreetMap>( Obj );
 
 	const FString Filename = StreetMap->AssetImportData->GetFirstFilename();
